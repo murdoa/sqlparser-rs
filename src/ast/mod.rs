@@ -1374,6 +1374,14 @@ pub enum Password {
     visit(with = "visit_statement")
 )]
 pub enum Statement {
+    // Foreach (Custom)
+    Foreach {
+        select_items: Vec<SelectItem>,
+        return_items: Option<Vec<SelectItem>>,
+        when_expr: Option<Expr>,
+        from_table: TableWithJoins,
+        where_expr: Option<Expr>
+    },
     /// Analyze (Hive)
     Analyze {
         #[cfg_attr(feature = "visitor", visit(with = "visit_relation"))]
@@ -2049,6 +2057,45 @@ impl fmt::Display for Statement {
     #[allow(clippy::cognitive_complexity)]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
+            Statement::Foreach { 
+                select_items, 
+                return_items, 
+                when_expr, 
+                from_table, 
+                where_expr
+             } => {
+                write!(f, "FOREACH")?;
+
+                let write_items = |f: &mut fmt::Formatter, items : &Vec<SelectItem>| -> Result<(), fmt::Error> {
+                    for (i, col) in items.iter().enumerate() {
+                        if i != 0 {
+                            write!(f, ",")?;
+                        }
+                        write!(f, " {}", col)?;
+                    }
+
+                    Ok(())
+                };
+
+                write_items(f, &select_items)?;
+
+                if return_items.is_some() {
+                    write!(f, " RETURN")?;
+                    write_items(f, return_items.as_ref().unwrap())?;
+                }
+
+                if let Some(when_expr) = when_expr {
+                    write!(f, " WHEN {}", when_expr)?;
+                }
+
+                write!(f, " FROM {}", from_table)?;
+
+                if let Some(where_expr) = where_expr {
+                    write!(f, " WHERE {}", where_expr)?;
+                }
+
+                Ok(())
+            },
             Statement::Kill { modifier, id } => {
                 write!(f, "KILL ")?;
 

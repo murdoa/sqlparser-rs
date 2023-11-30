@@ -91,6 +91,7 @@ impl TestedDialects {
                 tokenizer = tokenizer.with_unescape(options.unescape);
             }
             let tokens = tokenizer.tokenize()?;
+
             self.new_parser(dialect)
                 .with_tokens(tokens)
                 .parse_statements()

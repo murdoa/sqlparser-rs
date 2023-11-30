@@ -13,6 +13,7 @@
 mod ansi;
 mod bigquery;
 mod clickhouse;
+mod custom;
 mod duckdb;
 mod generic;
 mod hive;
@@ -41,6 +42,9 @@ pub use self::postgresql::PostgreSqlDialect;
 pub use self::redshift::RedshiftSqlDialect;
 pub use self::snowflake::SnowflakeDialect;
 pub use self::sqlite::SQLiteDialect;
+
+pub use self::custom::CustomDialect;
+
 pub use crate::keywords;
 use crate::parser::{Parser, ParserError};
 
@@ -186,6 +190,7 @@ pub fn dialect_from_str(dialect_name: impl AsRef<str>) -> Option<Box<dyn Dialect
         "bigquery" => Some(Box::new(BigQueryDialect)),
         "ansi" => Some(Box::new(AnsiDialect {})),
         "duckdb" => Some(Box::new(DuckDbDialect {})),
+        "custom" => Some(Box::new(CustomDialect {})),
         _ => None,
     }
 }
@@ -239,6 +244,9 @@ mod tests {
         assert!(parse_dialect("ANSI").is::<AnsiDialect>());
         assert!(parse_dialect("duckdb").is::<DuckDbDialect>());
         assert!(parse_dialect("DuckDb").is::<DuckDbDialect>());
+
+        assert!(parse_dialect("custom").is::<CustomDialect>());
+        assert!(parse_dialect("Custom").is::<CustomDialect>());
 
         // error cases
         assert!(dialect_from_str("Unknown").is_none());

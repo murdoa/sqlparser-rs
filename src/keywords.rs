@@ -285,6 +285,7 @@ define_keywords!(
     FORCE_NOT_NULL,
     FORCE_NULL,
     FORCE_QUOTE,
+    FOREACH,
     FOREIGN,
     FORMAT,
     FORWARD,
@@ -776,4 +777,5 @@ pub const RESERVED_FOR_COLUMN_ALIAS: &[Keyword] = &[
     Keyword::FROM,
     Keyword::INTO,
     Keyword::END,
+    Keyword::WHEN
 ];
