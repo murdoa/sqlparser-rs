@@ -1376,7 +1376,7 @@ pub enum Password {
 pub enum Statement {
     // Foreach (Custom)
     Foreach {
-        select_items: Vec<SelectItem>,
+        select_item: SelectItem,
         return_items: Option<Vec<SelectItem>>,
         when_expr: Option<Expr>,
         from_table: TableWithJoins,
@@ -2058,7 +2058,7 @@ impl fmt::Display for Statement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Statement::Foreach { 
-                select_items, 
+                select_item, 
                 return_items, 
                 when_expr, 
                 from_table, 
@@ -2077,7 +2077,7 @@ impl fmt::Display for Statement {
                     Ok(())
                 };
 
-                write_items(f, &select_items)?;
+                write!(f, " {:}", select_item)?;
 
                 if return_items.is_some() {
                     write!(f, " RETURN")?;

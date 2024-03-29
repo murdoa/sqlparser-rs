@@ -23,7 +23,7 @@ impl Dialect for CustomDialect {
 }
 
 pub fn parse_foreach(parser: &mut Parser) -> Result<Statement, ParserError> {
-    let select_items = parser.parse_projection()?;
+    let select_item = parser.parse_select_item()?;
 
     let return_items : Option<Vec<SelectItem>> = if parser.expect_keyword(Keyword::RETURN).is_ok() {
         Some(parser.parse_projection()?)
@@ -46,7 +46,7 @@ pub fn parse_foreach(parser: &mut Parser) -> Result<Statement, ParserError> {
         None
     };
 
-    Ok(Statement::Foreach { select_items: select_items,
+    Ok(Statement::Foreach { select_item,
                             return_items: return_items,
                             when_expr: when_expr,
                             from_table: from_table,

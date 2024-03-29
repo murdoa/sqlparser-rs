@@ -31,7 +31,7 @@ fn parse_foreach() {
     ).is_ok());
 
     assert!(dialect.parse_sql_statements(
-        "FOREACH payload.arr AS ele RETURN ele.name, ele.count WHEN ele.count = 1 FROM \"/topic/#\" WHERE payload.version > 2"
+        "FOREACH payload.arr AS ele RETURN ele.name, ele WHEN ele.count = 1 FROM \"/topic/#\" WHERE payload.version > 2"
     ).is_ok());
 
 
